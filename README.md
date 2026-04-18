@@ -35,7 +35,14 @@ AI-powered assistant for custom questions
 Multi-language support (e.g., Luganda)
 More tutorials (calls, mobile data, photos, etc.)
 Mobile app version
+
 📸 Screenshots
+<img width="1080" height="2322" alt="Screenshot_20260418_134205_Chrome" src="https://github.com/user-attachments/assets/7c508763-d16f-4ffc-bacd-c7af409f1c9e" />
+
+<img width="1080" height="2322" alt="Screenshot_20260418_134157_Chrome" src="https://github.com/user-attachments/assets/f321c23e-759e-4b5f-824f-8d59430c9830" />
+
+<img width="1080" height="2322" alt="Screenshot_20260418_134152_Chrome" src="https://github.com/user-attachments/assets/f1683ebd-4d93-40db-b260-6b87a3bec579" />
+
 🌍 Impact
 TapAssist helps senior citizens:
 Gain confidence using technology
