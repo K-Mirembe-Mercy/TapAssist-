@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TapAssist – Your Tech Helper</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --sky: #e8f4fd;
+    --blue: #1a6eb5;
+    --blue-dark: #134f85;
+    --blue-light: #d0e9f8;
+    --gold: #f5a623;
+    --gold-dark: #d4891a;
+    --green: #2e9e6b;
+    --green-light: #d4f0e4;
+    --red: #d94040;
+    --text: #1a1a2e;
+    --text-mid: #444460;
+    --text-light: #7a7a99;
+    --white: #ffffff;
+    --card: #ffffff;
+    --border: #c8dff0;
+    --shadow: 0 4px 24px rgba(26,110,181,0.10);
+    --radius: 22px;
+    --radius-sm: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #dbeeff 0%, #f0f7ff 60%, #fff8ee 100%);
+    min-height: 100vh;
+    color: var(--text);
+    font-size: 18px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--blue);
+    color: white;
+    padding: 18px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(26,110,181,0.25);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo-icon {
+    width: 52px; height: 52px;
+    background: var(--gold);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+  }
+  .logo-text h1 { font-size: 26px; font-weight: 900; line-height: 1.1; }
+  .logo-text p  { font-size: 15px; opacity: 0.85; font-weight: 600; }
+
+  .header-right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .font-btn {
+    background: rgba(255,255,255,0.18);
+    border: 2px solid rgba(255,255,255,0.35);
+    color: white; border-radius: 10px;
+    padding: 6px 14px; font-family: inherit;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    transition: background .2s;
+  }
+  .font-btn:hover { background: rgba(255,255,255,0.30); }
+  #font-label { font-size: 14px; opacity: 0.8; }
+
+  /* ── MAIN LAYOUT ── */
+  .container { max-width: 900px; margin: 0 auto; padding: 36px 20px 80px; }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 22px; font-weight: 600;
+    color: var(--blue-dark);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::before {
+    content: ''; display: inline-block;
+    width: 5px; height: 28px;
+    background: var(--gold); border-radius: 4px;
+  }
+
+  /* ── TOPIC GRID ── */
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+
+  .topic-btn {
+    background: var(--white);
+    border: 3px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 14px;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+    font-family: inherit;
+    font-size: 17px; font-weight: 800;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transition: transform .18s, border-color .18s, box-shadow .18s, background .18s;
+    text-align: center; line-height: 1.3;
+  }
+  .topic-btn:hover {
+    border-color: var(--blue);
+    background: var(--blue-light);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 32px rgba(26,110,181,0.18);
+  }
+  .topic-btn.active {
+    border-color: var(--blue);
+    background: var(--blue);
+    color: white;
+    box-shadow: 0 8px 28px rgba(26,110,181,0.30);
+  }
+  .topic-btn .icon { font-size: 38px; line-height: 1; }
+
+  /* ── GUIDE PANEL ── */
+  #guide-panel {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 40px;
+    display: none;
+    animation: slideIn .35s ease;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  .guide-header {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+    color: white;
+    padding: 24px 28px;
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .guide-header .guide-icon { font-size: 44px; }
+  .guide-header h2 { font-size: 24px; font-weight: 900; flex: 1; }
+
+  .voice-btn {
+    background: var(--gold);
+    color: white; border: none;
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-family: inherit; font-size: 16px; font-weight: 800;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: background .2s, transform .15s;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+    flex-shrink: 0;
+  }
+  .voice-btn:hover { background: var(--gold-dark); transform: scale(1.04); }
+  .voice-btn:disabled { opacity: 0.55; cursor: default; transform: none; }
+  .voice-btn.speaking { background: var(--red); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(217,64,64,.5)} 50%{box-shadow:0 0 0 10px rgba(217,64,64,0)} }
+
+  .guide-body { padding: 28px; }
+
+  .steps-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+  .step-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--sky);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    border-left: 5px solid var(--blue);
+    font-size: 17px; font-weight: 600; line-height: 1.5;
+  }
+  .step-num {
+    background: var(--blue);
+    color: white; border-radius: 50%;
+    min-width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; font-weight: 900; flex-shrink: 0;
+  }
+  .step-text { color: var(--text-mid); }
+
+  .tip-box {
+    background: #fffbe6;
+    border: 2px solid var(--gold);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    margin-top: 22px;
+    font-size: 16px; font-weight: 700;
+    color: #7a5800;
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .tip-box .tip-icon { font-size: 24px; flex-shrink: 0; }
+
+  /* ── CHATBOT ── */
+  #chat-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 2px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .chat-header {
+    background: var(--green);
+    color: white; padding: 18px 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .chat-header h3 { font-size: 20px; font-weight: 900; }
+  .chat-status {
+    margin-left: auto; font-size: 14px; font-weight: 700;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 4px 14px;
+  }
+
+  .chat-messages {
+    height: 340px;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 14px;
+    background: #f7fbff;
+  }
+
+  .msg {
+    display: flex; gap: 10px; align-items: flex-start;
+    animation: msgIn .25s ease;
+  }
+  @keyframes msgIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .msg.user { flex-direction: row-reverse; }
+
+  .msg-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .msg.bot .msg-avatar  { background: var(--green-light); }
+  .msg.user .msg-avatar { background: var(--blue-light); }
+
+  .msg-bubble {
+    max-width: 78%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    font-size: 16px; font-weight: 600; line-height: 1.55;
+  }
+  .msg.bot  .msg-bubble { background: white; border: 2px solid var(--border); color: var(--text); border-top-left-radius: 4px; }
+  .msg.user .msg-bubble { background: var(--blue); color: white; border-top-right-radius: 4px; }
+
+  .typing-dots span {
+    display: inline-block; width: 8px; height: 8px;
+    background: var(--text-light); border-radius: 50%; margin: 0 2px;
+    animation: dot 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: .2s; }
+  .typing-dots span:nth-child(3) { animation-delay: .4s; }
+  @keyframes dot { 0%,80%,100%{transform:scale(1);opacity:.4} 40%{transform:scale(1.4);opacity:1} }
+
+  .chat-input-row {
+    padding: 16px 20px;
+    border-top: 2px solid var(--border);
+    display: flex; gap: 12px; align-items: flex-end;
+    background: white;
+  }
+  .chat-input {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 16px;
+    font-family: inherit; font-size: 17px; font-weight: 600;
+    color: var(--text); outline: none;
+    resize: none; min-height: 52px; max-height: 120px;
+    transition: border-color .2s;
+  }
+  .chat-input:focus { border-color: var(--blue); }
+  .chat-send {
+    background: var(--blue); color: white; border: none;
+    border-radius: 14px; padding: 14px 20px;
+    font-size: 20px; cursor: pointer;
+    transition: background .2s, transform .15s;
+    flex-shrink: 0;
+  }
+  .chat-send:hover { background: var(--blue-dark); transform: scale(1.05); }
+  .chat-send:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+  .quick-questions {
+    padding: 12px 20px 0;
+    display: flex; gap: 10px; flex-wrap: wrap;
+    background: white;
+  }
+  .quick-q {
+    background: var(--green-light);
+    border: 2px solid var(--green);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-family: inherit; font-size: 14px; font-weight: 700;
+    color: var(--green); cursor: pointer;
+    transition: background .18s;
+  }
+  .quick-q:hover { background: var(--green); color: white; }
+
+  /* ── FONT SIZE SCALING ── */
+  body.font-large  { font-size: 21px; }
+  body.font-xlarge { font-size: 25px; }
+  body.font-large  .topic-btn  { font-size: 20px; }
+  body.font-xlarge .topic-btn  { font-size: 23px; }
+  body.font-large  .topic-btn .icon  { font-size: 46px; }
+  body.font-xlarge .topic-btn .icon  { font-size: 54px; }
+  body.font-large  .step-item, body.font-large  .msg-bubble { font-size: 20px; }
+  body.font-xlarge .step-item, body.font-xlarge .msg-bubble { font-size: 23px; }
+  body.font-large  .chat-input { font-size: 20px; }
+  body.font-xlarge .chat-input { font-size: 23px; }
+
+  /* ── SCROLLBAR ── */
+  .chat-messages::-webkit-scrollbar { width: 8px; }
+  .chat-messages::-webkit-scrollbar-track { background: #edf4fb; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--blue-light); border-radius: 8px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 28px;
+    font-size: 15px; color: var(--text-light); font-weight: 600;
+  }
+  footer a { color: var(--blue); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">🤝</div>
+  <div class="logo-text">
+    <h1>TapAssist</h1>
+    <p>Your Friendly Tech Helper</p>
+  </div>
+  <div class="header-right">
+    <span id="font-label">Text Size:</span>
+    <button class="font-btn" onclick="setFont('normal')" title="Normal size">A</button>
+    <button class="font-btn" onclick="setFont('large')"  title="Larger">A+</button>
+    <button class="font-btn" onclick="setFont('xlarge')" title="Largest">A++</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- TOPIC PICKER -->
+  <div class="section-title">Choose What You Need Help With</div>
+  <div class="topics-grid" id="topics-grid"></div>
+
+  <!-- GUIDE PANEL -->
+  <div id="guide-panel">
+    <div class="guide-header">
+      <span class="guide-icon" id="guide-icon"></span>
+      <h2 id="guide-title"></h2>
+      <button class="voice-btn" id="voice-btn" onclick="toggleVoice()">
+        🔊 Read Aloud
+      </button>
+    </div>
+    <div class="guide-body">
+      <ol class="steps-list" id="steps-list"></ol>
+      <div class="tip-box" id="tip-box">
+        <span class="tip-icon">💡</span>
+        <span id="tip-text"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATBOT -->
+  <div id="chat-section">
+    <div class="chat-header">
+      <span style="font-size:26px">🤖</span>
+      <h3>Ask Me Anything!</h3>
+      <span class="chat-status">AI Powered</span>
+    </div>
+    <div class="quick-questions" id="quick-questions"></div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg bot">
+        <div class="msg-avatar">🤖</div>
+        <div class="msg-bubble">
+          Hello! I'm your tech helper. Tap a topic above, or ask me anything you need help with — I'll explain it in simple, friendly steps! 😊
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chat-input"
+        placeholder="Type your question here…"
+        rows="1"
+        onkeydown="handleKey(event)"
+        oninput="autoResize(this)"></textarea>
+      <button class="chat-send" id="send-btn" onclick="sendMessage()" title="Send">➤</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Made with ❤️ for <a href="https://genlink.org" target="_blank">GenLink</a> — Helping seniors navigate technology with confidence.
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────
+const TOPICS = [
+  {
+    id: "whatsapp",
+    icon: "💬",
+    label: "Send a WhatsApp Message",
+    steps: [
+      "Open the WhatsApp app on your phone — it looks like a green speech bubble.",
+      "Tap the chat icon (a pencil or speech bubble) at the bottom or top of your screen.",
+      "Find the person you want to message by scrolling or typing their name in the search bar.",
+      "Tap their name to open your conversation.",
+      "Tap the text box at the bottom of the screen — the keyboard will pop up.",
+      "Type your message, then tap the green arrow button (➤) to send!"
+    ],
+    tip: "Not sure how to find someone? Ask a family member to add their number to your contacts first — then they'll show up in WhatsApp automatically."
+  },
+  {
+    id: "zoom",
+    icon: "📹",
+    label: "Join a Zoom Meeting",
+    steps: [
+      "Make sure Zoom is installed on your device. If not, go to your App Store or Play Store and search 'Zoom'.",
+      "Open the email or message with your Zoom invitation.",
+      "Look for a blue link that says 'Join Zoom Meeting' and tap it.",
+      "Zoom will open automatically. If asked, tap 'Open' or 'Allow'.",
+      "Tap 'Join with Video' so others can see you, and 'Join with Computer Audio' so you can hear them.",
+      "You're in! You'll see other people's faces on the screen. Wave hello! 👋"
+    ],
+    tip: "If the link doesn't work, open the Zoom app, tap 'Join a Meeting', and type the Meeting ID number from your invitation email."
+  },
+  {
+    id: "scams",
+    icon: "🛡️",
+    label: "Avoid Scams",
+    steps: [
+      "STOP if someone calls, texts, or emails asking for money, gift cards, or your Social Security number.",
+      "Never give out passwords, bank details, or personal info to someone who contacts YOU first.",
+      "Real companies like the IRS, Medicare, or your bank will NEVER demand immediate payment by phone.",
+      "If a message says 'Act NOW or something bad will happen' — it's almost always a scam. Scammers use fear.",
+      "Hang up and call the company directly using a number from their official website — not the number they gave you.",
+      "When in doubt, ask a trusted family member or friend before doing anything."
+    ],
+    tip: "A good rule: if it seems too good to be true (free prizes, lottery winnings) or too scary (arrest, lawsuit) — it's a scam. You can always hang up. That's always OK."
+  },
+  {
+    id: "email",
+    icon: "📧",
+    label: "Send an Email",
+    steps: [
+      "Open your email app — this might be Gmail (colorful envelope), Outlook (blue envelope), or Apple Mail.",
+      "Tap the pencil icon or 'Compose' button — usually in the corner of the screen.",
+      "In the 'To' box, type the email address of the person you're writing to (e.g. name@gmail.com).",
+      "Tap the 'Subject' box and type a short title for your email (e.g. 'Hello from Mary').",
+      "Tap the big blank area and type your message.",
+      "When you're done, tap the 'Send' button — it usually looks like a paper airplane! ✈️"
+    ],
+    tip: "Made a spelling mistake? Don't worry — tap the word and your phone will offer to fix it. You can also tap 'Drafts' to save and come back later."
+  },
+  {
+    id: "wifi",
+    icon: "📶",
+    label: "Connect to Wi-Fi",
+    steps: [
+      "On your phone or tablet, open 'Settings' — it looks like a gear or cog icon ⚙️.",
+      "Tap 'Wi-Fi' or 'Network & Internet'.",
+      "Make sure Wi-Fi is switched ON (the switch should be green or blue).",
+      "A list of nearby Wi-Fi networks will appear. Tap the name of your home Wi-Fi.",
+      "Type your Wi-Fi password when asked. (Check the bottom of your router for the password if you're unsure.)",
+      "Tap 'Connect' or 'Join'. When you see a checkmark or Wi-Fi symbol at the top of your screen, you're connected!"
+    ],
+    tip: "Your Wi-Fi password is usually on a sticker on your router — the box that your internet provider gave you. It might be called 'Network Key' or 'Wireless Password'."
+  },
+  {
+    id: "video-call",
+    icon: "📱",
+    label: "Make a Video Call",
+    steps: [
+      "Open FaceTime (on iPhone/iPad) or Google Duo/Meet (on Android). Both work similarly.",
+      "Tap on the person's name or phone number you want to call.",
+      "Tap the video camera icon 📷 to start a video call (not just a regular phone call).",
+      "Hold your phone so your face is visible — try to be in a bright room.",
+      "You'll see yourself in a small box and the other person in the big area.",
+      "When you're done talking, tap the red phone button 🔴 to hang up."
+    ],
+    tip: "If the call is blurry or keeps cutting out, try moving closer to your Wi-Fi router, or ask whoever you're calling to do the same."
+  },
+  {
+    id: "chatgpt",
+    icon: "🧠",
+    label: "Use ChatGPT or AI",
+    steps: [
+      "Open your web browser (Safari, Chrome, or Edge) and go to chat.openai.com OR download the ChatGPT app.",
+      "Create a free account using your email address, or tap 'Continue with Google' if you have a Gmail.",
+      "You'll see a text box at the bottom of the screen. Tap it.",
+      "Type your question in plain English — just like asking a person! For example: 'What's a good recipe for chicken soup?'",
+      "Press Enter or tap the send arrow. The AI will type back an answer in seconds.",
+      "You can ask follow-up questions just like a conversation. Try 'Can you explain that more simply?'"
+    ],
+    tip: "ChatGPT is like a very smart assistant. You can ask it to explain things, help write a letter, or answer any question. It won't judge you — ask anything!"
+  },
+  {
+    id: "photos",
+    icon: "🖼️",
+    label: "Share a Photo",
+    steps: [
+      "Open the Photos app on your phone — it looks like a colorful pinwheel or a flower.",
+      "Find the photo you want to share by scrolling through your pictures.",
+      "Tap the photo to open it in full screen.",
+      "Look for a Share button — it's usually a box with an arrow pointing up ⬆️ or three dots ⋯.",
+      "A menu will appear. Tap the app you want to use — Message, WhatsApp, Email, or Facebook.",
+      "Add a message if you like, then tap 'Send'. The photo is on its way!"
+    ],
+    tip: "Want to share multiple photos at once? Tap 'Select' in your Photos app, then tap each photo you want — a blue checkmark will appear. Then press the Share button."
+  },
+];
+
+const QUICK_QUESTIONS = [
+  "What is Wi-Fi?",
+  "Is this message a scam?",
+  "How do I charge my phone?",
+  "What is a password?",
+  "How do I make text bigger?",
+];
+
+// ─────────────────────────────────────────────
+// RENDER TOPICS
+// ─────────────────────────────────────────────
+function renderTopics() {
+  const grid = document.getElementById('topics-grid');
+  TOPICS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn';
+    btn.dataset.id = t.id;
+    btn.innerHTML = `<span class="icon">${t.icon}</span>${t.label}`;
+    btn.onclick = () => showGuide(t.id);
+    grid.appendChild(btn);
+  });
+}
+
+// ─────────────────────────────────────────────
+// SHOW GUIDE
+// ─────────────────────────────────────────────
+let currentTopic = null;
+
+function showGuide(id) {
+  stopVoice();
+  currentTopic = TOPICS.find(t => t.id === id);
+  if (!currentTopic) return;
+
+  // Active button state
+  document.querySelectorAll('.topic-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.id === id);
+  });
+
+  // Fill content
+  document.getElementById('guide-icon').textContent = currentTopic.icon;
+  document.getElementById('guide-title').textContent = currentTopic.label;
+
+  const list = document.getElementById('steps-list');
+  list.innerHTML = '';
+  currentTopic.steps.forEach((step, i) => {
+    const li = document.createElement('li');
+    li.className = 'step-item';
+    li.innerHTML = `<div class="step-num">${i+1}</div><div class="step-text">${step}</div>`;
+    list.appendChild(li);
+  });
+
+  document.getElementById('tip-text').textContent = currentTopic.tip;
+
+  const panel = document.getElementById('guide-panel');
+  panel.style.display = 'block';
+  // reset animation
+  panel.style.animation = 'none';
+  panel.offsetHeight;
+  panel.style.animation = 'slideIn .35s ease';
+
+  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+  // Suggest in chat
+  addBotMessage(`Great choice! I've loaded the steps for <strong>${currentTopic.label}</strong>. You can read them above, or press 🔊 Read Aloud. Do you have any questions about it?`);
+  updateQuickQuestions(currentTopic.id);
+}
+
+// ─────────────────────────────────────────────
+// VOICE
+// ─────────────────────────────────────────────
+let utterance = null;
+
+function buildSpeechText(topic) {
+  let text = `Here's how to ${topic.label}. `;
+  topic.steps.forEach((s, i) => { text += `Step ${i+1}: ${s} `; });
+  text += `Tip: ${topic.tip}`;
+  return text;
+}
+
+function toggleVoice() {
+  const btn = document.getElementById('voice-btn');
+  if (window.speechSynthesis.speaking) {
+    stopVoice(); return;
+  }
+  if (!currentTopic) return;
+  utterance = new SpeechSynthesisUtterance(buildSpeechText(currentTopic));
+  utterance.rate = 0.88;
+  utterance.pitch = 1.05;
+  utterance.volume = 1;
+  utterance.onend = () => {
+    btn.textContent = '🔊 Read Aloud';
+    btn.classList.remove('speaking');
+  };
+  window.speechSynthesis.speak(utterance);
+  btn.innerHTML = '⏹ Stop Reading';
+  btn.classList.add('speaking');
+}
+
+function stopVoice() {
+  if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  const btn = document.getElementById('voice-btn');
+  if (btn) { btn.innerHTML = '🔊 Read Aloud'; btn.classList.remove('speaking'); }
+}
+
+// ─────────────────────────────────────────────
+// QUICK QUESTIONS
+// ─────────────────────────────────────────────
+function updateQuickQuestions(topicId) {
+  const extras = {
+    whatsapp: ["Can I send photos on WhatsApp?", "How do I make a WhatsApp call?"],
+    zoom:     ["What's a Meeting ID?", "How do I mute myself?"],
+    scams:    ["What should I do if I got scammed?", "How do I report a scam?"],
+    email:    ["How do I attach a photo to email?", "How do I reply to an email?"],
+    wifi:     ["Why is my Wi-Fi slow?", "What if I forgot my password?"],
+  };
+  renderQuickQ([...(extras[topicId] || []), ...QUICK_QUESTIONS.slice(0,3)]);
+}
+
+function renderQuickQ(questions) {
+  const container = document.getElementById('quick-questions');
+  container.innerHTML = '';
+  questions.slice(0,5).forEach(q => {
+    const btn = document.createElement('button');
+    btn.className = 'quick-q';
+    btn.textContent = q;
+    btn.onclick = () => askQuestion(q);
+    container.appendChild(btn);
+  });
+}
+
+// ─────────────────────────────────────────────
+// CHAT
+// ─────────────────────────────────────────────
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL   = "claude-sonnet-4-20250514";
+
+let chatHistory = [];
+
+function buildSystemPrompt() {
+  let context = "";
+  if (currentTopic) {
+    context = `The user is currently viewing a guide about: "${currentTopic.label}". Steps: ${currentTopic.steps.join(' | ')}. Tip: ${currentTopic.tip}.`;
+  }
+  return `You are TapAssist, a warm, patient, and encouraging tech helper specifically designed for senior citizens (ages 65+). Your job is to explain technology in the simplest, friendliest way possible.
+
+Rules:
+- Use very simple language. Avoid jargon. If you must use a tech word, always explain it.
+- Keep answers short and clear (3-6 sentences max unless more steps are truly needed).
+- Be warm, encouraging, and never condescending.
+- Use numbered steps when explaining how to do something.
+- Use emoji sparingly to make text friendly and easy to scan.
+- If someone seems worried or confused, reassure them first.
+- Never say "as an AI" or "I'm a language model". Just be a helpful friend.
+${context ? '\nCurrent context: ' + context : ''}`;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  addUserMessage(text);
+  input.value = '';
+  autoResize(input);
+
+  chatHistory.push({ role: "user", content: text });
+
+  const typingId = addTypingIndicator();
+  document.getElementById('send-btn').disabled = true;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 1000,
+        system: buildSystemPrompt(),
+        messages: chatHistory,
+      })
+    });
+
+    removeTypingIndicator(typingId);
+
+    if (!res.ok) throw new Error("API error " + res.status);
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || "I'm sorry, I didn't get a response. Please try again!";
+
+    chatHistory.push({ role: "assistant", content: reply });
+    addBotMessage(reply);
+  } catch (err) {
+    removeTypingIndicator(typingId);
+    addBotMessage("Oops! I had a little trouble connecting. Please check your internet and try again. You can also read the step-by-step guide above! 😊");
+    console.error(err);
+  } finally {
+    document.getElementById('send-btn').disabled = false;
+  }
+}
+
+function askQuestion(q) {
+  document.getElementById('chat-input').value = q;
+  sendMessage();
+  document.getElementById('chat-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function addUserMessage(text) {
+  appendMsg('user', '🧑', escHtml(text));
+}
+
+function addBotMessage(html) {
+  appendMsg('bot', '🤖', html);
+}
+
+function appendMsg(type, avatar, html) {
+  const box = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = `msg ${type}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div class="msg-bubble">${html}</div>
+  `;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function addTypingIndicator() {
+  const id = 'typing-' + Date.now();
+  const box = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'msg bot'; div.id = id;
+  div.innerHTML = `
+    <div class="msg-avatar">🤖</div>
+    <div class="msg-bubble">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+  `;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return id;
+}
+
+function removeTypingIndicator(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ─────────────────────────────────────────────
+// FONT SIZE
+// ─────────────────────────────────────────────
+function setFont(size) {
+  document.body.classList.remove('font-large', 'font-xlarge');
+  if (size === 'large')  document.body.classList.add('font-large');
+  if (size === 'xlarge') document.body.classList.add('font-xlarge');
+  localStorage.setItem('tapassist-font', size);
+}
+
+// ─────────────────────────────────────────────
+// UTILS
+// ─────────────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+renderTopics();
+renderQuickQ(QUICK_QUESTIONS);
+
+const savedFont = localStorage.getItem('tapassist-font');
+if (savedFont) setFont(savedFont);
+</script>
+</body>
+</html>
